@@ -1,0 +1,66 @@
+pool:
+  vmImage: 'ubuntu-latest'
+  name: 'Azure Pipelines'
+
+trigger:
+- none
+
+variables:
+  workingDirectorybureautiquedev: '$(Build.SourcesDirectory)/Bureautique/dev'
+
+resources:
+  repositories:
+  - repository: Bureautique
+    type: git
+    name: infra/Bureautique
+  - repository: vnet
+    type: git
+    name: infra/vnet
+    #ref: refs/tags/v2.5
+  - repository: nsg
+    type: git
+    name: infra/nsg
+    ref: refs/tags/v2.0
+  - repository: resource_group
+    type: git
+    name: infra/resource_group
+    ref: refs/tags/v1.0
+
+
+jobs:
+- job: Job_1
+  displayName: Build infra for dev bureautique
+  steps:
+  - checkout: Bureautique
+  - checkout: vnet
+  - checkout: nsg
+  - checkout: resource_group
+  - task: TerraformInstaller@0
+    displayName: Install Terraform latest
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform : init'
+    inputs:
+      workingDirectory: $(Build.SourcesDirectory)/Bureautique/dev
+      backendServiceArm: 301e084d-509d-4390-a2a3-a514ff3dc6b1
+      backendAzureRmResourceGroupName: rg-bureautique-iac
+      backendAzureRmStorageAccountName: sabureautiqueiac
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: hHaDPumh62Eq7Aq3k61dW23xkM+cSeE27Tf3vCZF2E3dLLE4rPmnDA6aPUx+q1ceACufK1gqSyKX+AStk6evlg==
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform : validate'
+    inputs:
+      command: validate
+      workingDirectory: $(Build.SourcesDirectory)/Bureautique/dev
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform : plan'
+    inputs:
+      command: plan
+      workingDirectory: $(Build.SourcesDirectory)/Bureautique/dev
+      environmentServiceNameAzureRM: 301e084d-509d-4390-a2a3-a514ff3dc6b1
+  - task: TerraformTaskV3@3
+    displayName: 'Terraform : apply'
+    inputs:
+      command: apply
+      workingDirectory: $(Build.SourcesDirectory)/Bureautique/dev
+      environmentServiceNameAzureRM: 301e084d-509d-4390-a2a3-a514ff3dc6b1
+...
