@@ -3,7 +3,7 @@ terraform {
     resource_group_name  = "rg-bureautique-iac"
     storage_account_name = "sabureautiqueiac"
     container_name       = "tfstate"
-    key                  = "hHaDPumh62Eq7Aq3k61dW23xkM+cSeE27Tf3vCZF2E3dLLE4rPmnDA6aPUx+q1ceACufK1gqSyKX+AStk6evlg=="
+    key                  = ""
   }
 }
 

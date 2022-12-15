@@ -45,7 +45,7 @@ jobs:
       backendAzureRmResourceGroupName: rg-bureautique-iac
       backendAzureRmStorageAccountName: sabureautiqueiac
       backendAzureRmContainerName: tfstate
-      backendAzureRmKey: hHaDPumh62Eq7Aq3k61dW23xkM+cSeE27Tf3vCZF2E3dLLE4rPmnDA6aPUx+q1ceACufK1gqSyKX+AStk6evlg==
+      backendAzureRmKey: 
   - task: TerraformTaskV3@3
     displayName: 'Terraform : validate'
     inputs:
